@@ -1,0 +1,13 @@
+[install]
+run = ["python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && (command -v redis-server >/dev/null || sudo apt-get install -y redis-server)"]
+
+[setup.cloud]
+run = ["(redis-cli ping >/dev/null 2>&1 || sudo service redis-server start || true)"]
+
+[terminals.web]
+default = true
+run = "REDIS_URL=${REDIS_URL:-redis://localhost:6379} .venv/bin/gunicorn app:app -b 0.0.0.0:8000"
+
+[ports.web]
+port = 8000
+preview = true
